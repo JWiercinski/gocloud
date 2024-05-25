@@ -44,7 +44,7 @@ jobs:
         app-name: 'jwgoserver'
         slot-name: 'production'
         publish-profile: ${{ secrets.PUBLISHPROFILE }}
-        images: 'index.docker.io/${{ secrets.DOCKUSER }}/jwiercinski/goazure:${{ github.sha }}'
+        images: 'index.docker.io/jwiercinski/goazure:${{ github.sha }}'
 
     - name: Send mail
       if: ${{ success() }}
