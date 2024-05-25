@@ -42,7 +42,6 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'jwgoserver'
-        slot-name: 'production'
         publish-profile: ${{ secrets.PUBLISHPROFILE }}
         images: 'index.docker.io/jwiercinski/goazure:latest'
 
