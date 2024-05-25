@@ -37,7 +37,20 @@ jobs:
         push: true
         tags: jwiercinski/goazure:latest
 
-deploy:
+    - name: Send mail
+      if: ${{ success() }}
+      uses: dawidd6/action-send-mail@v2
+      with:
+          server_address: smtp.office365.com
+          server_port: 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: Status budowy aplikacji Go
+          to: ${{ secrets.MAIL_USERNAME }}
+          from: ${{ secrets.MAIL_USERNAME }}
+          body: Build zakończony powodzeniem!
+
+  deploy:
       runs-on: ubuntu-latest
       needs: build
       environment:
@@ -53,18 +66,5 @@ deploy:
             slot-name: 'production'
             publish-profile: ${{ secrets.AzureAppService_PublishProfile_ceb306a650d844ceb0cdbb19b351764a }}
             images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_a176979f61284c84bacd063128229754 }}/goazure:latest'
-
-        - name: Send mail
-          if: ${{ success() }}
-          uses: dawidd6/action-send-mail@v2
-          with:
-          server_address: smtp.office365.com
-          server_port: 587
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: Status budowy aplikacji Go
-          to: ${{ secrets.MAIL_USERNAME }}
-          from: ${{ secrets.MAIL_USERNAME }}
-          body: Build i deployment zakończony powodzeniem!
 
 
