@@ -37,17 +37,26 @@ jobs:
         push: true
         tags: jwiercinski/goazure:latest
 
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'jwgoserver'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.PUBLISHPROFILE }}
+        images: 'index.docker.io/${{ secrets.DOCKUSER }}/jwiercinski/goazure:${{ github.sha }}'
+
     - name: Send mail
       if: ${{ success() }}
       uses: dawidd6/action-send-mail@v2
       with:
-          server_address: smtp.office365.com
-          server_port: 587
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: Status budowy aplikacji Go
-          to: ${{ secrets.MAIL_USERNAME }}
-          from: ${{ secrets.MAIL_USERNAME }}
-          body: Build zakończony powodzeniem!
+        server_address: smtp.office365.com
+        server_port: 587
+        username: ${{ secrets.MAIL_USERNAME }}
+        password: ${{ secrets.MAIL_PASSWORD }}
+        subject: Status budowy aplikacji Go
+        to: ${{ secrets.MAIL_USERNAME }}
+        from: ${{ secrets.MAIL_USERNAME }}
+        body: Build i deployment zakończony powodzeniem!
 
 
