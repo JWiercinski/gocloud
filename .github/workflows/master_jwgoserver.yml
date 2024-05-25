@@ -10,6 +10,32 @@ on:
   workflow_dispatch:
 
 jobs:
+  simplebuild:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22'
+
+    - name: Build
+      run: go build -v ./...
+      
+    - name: Send mail
+      if: ${{ success() }}
+      uses: dawidd6/action-send-mail@v2
+      with:
+          server_address: smtp.office365.com
+          server_port: 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: Status budowy aplikacji Go
+          to: ${{ secrets.MAIL_USERNAME }}
+          from: ${{ secrets.MAIL_USERNAME }}
+          body: Standardowy build zakończony powodzeniem!
+
   build:
     runs-on: 'ubuntu-latest'
 
