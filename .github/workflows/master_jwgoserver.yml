@@ -51,11 +51,13 @@ jobs:
           body: Build zakończony powodzeniem!
 
   deploy:
+      permissions:
+        contents: none
       runs-on: ubuntu-latest
       needs: build
       environment:
         name: 'production'
-        url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+        url: 'jwgoserver.azurewebsites.net'
 
       steps:
         - name: Deploy to Azure Web App
@@ -64,7 +66,5 @@ jobs:
           with:
             app-name: 'jwgoserver'
             slot-name: 'production'
-            publish-profile: ${{ secrets.AzureAppService_PublishProfile_ceb306a650d844ceb0cdbb19b351764a }}
-            images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_a176979f61284c84bacd063128229754 }}/goazure:latest'
-
-
+            publish-profile: ${{ secrets.PUBLISHPROFILE }}
+            images: 'index.docker.io/jwiercinski/goazure:latest'
